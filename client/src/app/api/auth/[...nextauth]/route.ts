@@ -25,7 +25,7 @@ const handler = NextAuth({
         const existingUser = await db
           .select()
           .from(User)
-          .where(eq(User.username, user.name));
+          .where(eq(User.email, user.email));
 
         if (existingUser.length > 0) {
           return true;

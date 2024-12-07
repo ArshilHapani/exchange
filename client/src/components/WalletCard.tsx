@@ -1,21 +1,23 @@
 "use client";
 
-import { Copy, Plus, Timer } from "lucide-react";
+import { Plus, Timer } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import useModal from "@/hooks/useDialog";
 import AddINRFundDialog from "@/components/dialogs/AddINRFundDialog";
+import useModal from "@/hooks/useDialog";
+import Address from "./Address";
 
 type Props = {
   balance: number;
   userId: number;
+  userAddress: string;
 };
 
-export function WalletCard({ balance, userId }: Props) {
+export function WalletCard({ balance, userId, userAddress }: Props) {
   const session = useSession();
   const { openModal } = useModal();
   return (
@@ -36,16 +38,14 @@ export function WalletCard({ balance, userId }: Props) {
               Welcome back, {session?.data?.user?.name}!
             </h2>
           </div>
-          <Button variant="secondary" size="sm" className="gap-2">
-            <Copy className="h-4 w-4" />
-            Your Wallet Address
-          </Button>
+          {/* address component */}
+          <Address address={userAddress} />
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
               <Timer size={20} />
-              TipLink Account Assets
+              CryptoLink Account Assets
             </div>
             <div className="flex items-baseline gap-1">
               <span className="text-4xl font-bold">₹ {balance}</span>
@@ -67,7 +67,9 @@ export function WalletCard({ balance, userId }: Props) {
           <Tabs defaultValue="tokens" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="tokens">Tokens</TabsTrigger>
-              <TabsTrigger value="nfts">NFTs</TabsTrigger>
+              <TabsTrigger disabled value="nfts">
+                NFTs
+              </TabsTrigger>
               <TabsTrigger value="activity">Activity</TabsTrigger>
             </TabsList>
             <TabsContent value="tokens" className="py-4">
@@ -78,7 +80,10 @@ export function WalletCard({ balance, userId }: Props) {
                 <p className="text-sm text-muted-foreground">
                   Start by buying or depositing funds:
                 </p>
-                <Button className="gap-2">
+                <Button
+                  className="gap-2"
+                  onClick={() => openModal("add-inr-funds")}
+                >
                   <Plus className="h-4 w-4" />
                   Add Funds
                 </Button>

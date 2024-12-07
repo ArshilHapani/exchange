@@ -16,6 +16,7 @@ export async function addBalance({
       .update(InrWallet)
       .set({ inr: sql`${InrWallet.inr} + ${amount}` })
       .where(eq(InrWallet.userId, userId));
+    return true;
   } catch {
     return false;
   }

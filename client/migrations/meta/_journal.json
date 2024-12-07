@@ -36,6 +36,13 @@
       "when": 1733257404386,
       "tag": "0004_lush_deathbird",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1733601247761,
+      "tag": "0005_narrow_black_queen",
+      "breakpoints": true
     }
   ]
 }

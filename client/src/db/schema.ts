@@ -7,7 +7,7 @@ export const providerEnum = pgEnum("provider", [
 
 export const User = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  username: text("username").notNull().unique(),
+  username: text("username").notNull(),
   email: text("email").notNull().unique(),
   solWalletId: integer("solWalletId"), // optional
   inrWalletId: integer("inrWalletId"), // optional

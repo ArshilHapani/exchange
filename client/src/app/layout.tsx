@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import SessionProvider from "@/components/provider/SessionProvider";
 import Navbar from "@/components/nav-bar";
 import ModalProvider from "@/components/provider/ModalProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
 
@@ -38,6 +39,7 @@ export default async function RootLayout({
         <SessionProvider session={session}>
           <Navbar />
           <ModalProvider />
+          <Toaster />
           {children}
         </SessionProvider>
       </body>
