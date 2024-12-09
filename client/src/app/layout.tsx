@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 
 import SessionProvider from "@/components/provider/SessionProvider";
 import Navbar from "@/components/nav-bar";
-import ModalProvider from "@/components/provider/ModalProvider";
+import Provider from "@/components/provider";
 import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
@@ -37,10 +37,11 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider session={session}>
-          <Navbar />
-          <ModalProvider />
-          <Toaster />
-          {children}
+          <Provider>
+            <Navbar />
+            <Toaster />
+            {children}
+          </Provider>
         </SessionProvider>
       </body>
     </html>

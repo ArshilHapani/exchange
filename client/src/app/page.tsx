@@ -1,11 +1,11 @@
 import { getServerSession } from "next-auth";
+import { eq } from "drizzle-orm";
 
 import { HeroSection } from "@/components/hero-section";
 import ProductCards from "@/components/ProductCard";
 import { WalletCard } from "../components/WalletCard";
 import db from "@/lib/drizzle";
 import { InrWallet, SolWallet, User } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 export default async function Home() {
   const session = await getServerSession();

@@ -23,6 +23,7 @@
     "@radix-ui/react-toast": "^1.2.2",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.5",
+    "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.36.4",
@@ -32,6 +33,7 @@
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-hook-form": "^7.53.2",
+    "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.1"

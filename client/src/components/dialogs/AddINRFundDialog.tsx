@@ -2,6 +2,7 @@
 
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -16,11 +17,9 @@ import {
 import { addBalance } from "@/actions";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useToast } from "@/hooks/use-toast";
 
 export default function AddINRFundDialog({ userId }: { userId: number }) {
   const { closeModal, isOpen, type } = useModal();
-  const { toast } = useToast();
   const router = useRouter();
   const [pending, setPending] = useState(false);
 
@@ -30,11 +29,7 @@ export default function AddINRFundDialog({ userId }: { userId: number }) {
       setPending(true);
       const amount = data.get("amount");
       if (!amount || Number(amount) === 0 || amount === "") {
-        toast({
-          variant: "destructive",
-          title: "Invalid amount",
-          description: "Please enter a valid amount",
-        });
+        toast.error("Please enter a valid amount");
         return;
       }
       const res = await addBalance({
@@ -42,26 +37,14 @@ export default function AddINRFundDialog({ userId }: { userId: number }) {
         amount: Number(amount) ?? 10,
       });
       if (res) {
-        toast({
-          variant: "success",
-          title: "Funds added",
-          description: `Added INR ${amount} to your account`,
-        });
+        toast.success(`Balance of ${amount} added into your wallet`);
         router.refresh();
         closeModal();
       } else {
-        toast({
-          variant: "destructive",
-          title: "Failed to add funds",
-          description: "Please try again later",
-        });
+        toast.error("Failed to add fund");
       }
     } catch {
-      toast({
-        variant: "destructive",
-        title: "Failed to add funds",
-        description: "Please try again later",
-      });
+      toast.warning("Failed to add fund");
     } finally {
       setPending(false);
     }

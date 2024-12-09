@@ -22,7 +22,7 @@ export function WalletCard({ balance, userId, userAddress }: Props) {
   const { openModal } = useModal();
   return (
     <>
-      <Card className="w-full max-w-3xl mx-auto">
+      <Card className="w-full max-w-3xl mx-auto transition-all duration-150 hover:drop-shadow-xl">
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12">
