@@ -21,3 +21,21 @@ export async function addBalance({
     return false;
   }
 }
+
+export async function withdrawBalance({
+  amount,
+  userId,
+}: {
+  amount: number;
+  userId: number;
+}) {
+  try {
+    await db
+      .update(InrWallet)
+      .set({ inr: sql`${InrWallet.inr} - ${amount}` })
+      .where(eq(InrWallet.userId, userId));
+    return true;
+  } catch {
+    return false;
+  }
+}

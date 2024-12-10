@@ -5,13 +5,19 @@ import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface AddressProps {
   address: string;
   truncateLength?: number;
+  className?: string;
 }
 
-export default function Address({ address, truncateLength = 4 }: AddressProps) {
+export default function Address({
+  address,
+  truncateLength = 4,
+  className,
+}: AddressProps) {
   const [isCopied, setIsCopied] = useState(false);
 
   const truncatedAddress = `${address.slice(
@@ -32,7 +38,12 @@ export default function Address({ address, truncateLength = 4 }: AddressProps) {
   };
 
   return (
-    <div className="flex items-center space-x-2 bg-secondary px-2 py-1 rounded-md">
+    <div
+      className={cn(
+        "flex items-center justify-between space-x-2 bg-secondary px-2 py-1 rounded-md",
+        className
+      )}
+    >
       <span className="font-mono text-sm">{truncatedAddress}</span>
       <Button
         variant="ghost"

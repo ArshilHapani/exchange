@@ -9,3 +9,22 @@ export type PriceApiResponse = {
     usd: number;
   };
 };
+
+export interface BaseResponse {
+  success: boolean;
+  message: string;
+}
+
+export type BalanceMetaData = {
+  token: string;
+  balanceInUSD: number;
+  balance: number;
+  price: number;
+};
+
+export interface UserBalanceEndpointReturnType extends BaseResponse {
+  data?: {
+    totalBalance: number;
+    balance: BalanceMetaData[];
+  };
+}

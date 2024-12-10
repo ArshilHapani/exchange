@@ -1,11 +1,10 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import useModal from "@/hooks/useDialog";
 import {
   Dialog,
@@ -14,53 +13,70 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { addBalance } from "@/actions";
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { withdrawBalance } from "@/actions";
 
-export default function AddINRFundDialog({ userId }: { userId: number }) {
+type Props = {
+  usrId: number;
+  availableInrBalance: number;
+};
+
+const WithDrawFundModal = ({ availableInrBalance, usrId }: Props) => {
   const { closeModal, isOpen, type } = useModal();
-  const router = useRouter();
   const [pending, setPending] = useState(false);
+  const router = useRouter();
+  const modalOpen = isOpen && type == "withdraw-funds";
 
-  const modalOpen = isOpen && type == "add-inr-funds";
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     try {
       setPending(true);
+
       const amount = data.get("amount");
-      if (!amount || Number(amount) === 0 || amount === "") {
-        toast.error("Please enter a valid amount");
+      if (!amount || Number(amount) == 0 || amount == "") {
+        toast.warning("Withdraw amount must be greater than 0");
         return;
       }
-      const res = await addBalance({
-        userId,
+      if (Number(amount) > availableInrBalance) {
+        toast.error(
+          `Redeeming balance must be less than or equal to wallet balance (${availableInrBalance} ₹)`
+        );
+        return;
+      }
+
+      const res = await withdrawBalance({
+        userId: usrId,
         amount: Number(amount) ?? 0,
       });
       if (res) {
-        toast.success(`Balance of ${amount} added into your wallet`);
-        router.refresh();
+        toast.success(`Balance of ${amount} ₹ withdrawn from your wallet`);
         closeModal();
       } else {
-        toast.error("Failed to add fund");
+        toast.error("Failed to withdraw fund");
       }
+      router.refresh();
     } catch {
-      toast.warning("Failed to add fund");
+      toast.warning("Failed to withdraw fund");
     } finally {
       setPending(false);
     }
   }
-
   return (
     <Dialog open={modalOpen} onOpenChange={closeModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add INR Funds</DialogTitle>
+          <DialogTitle>
+            Withdraw funds (available funds {availableInrBalance} ₹)
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div>
-            <Label htmlFor="name">Amount (note these are mocks)</Label>
+            <Label htmlFor="name">
+              Amount to withdraw (note these are mocks)
+            </Label>
             <Input type="number" id="amount" name="amount" disabled={pending} />
           </div>
           <DialogFooter>
@@ -79,4 +95,6 @@ export default function AddINRFundDialog({ userId }: { userId: number }) {
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default WithDrawFundModal;

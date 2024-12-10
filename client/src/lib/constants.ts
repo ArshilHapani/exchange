@@ -18,7 +18,7 @@ export const SUPPORTED_TOKENS = [
   {
     name: "usd-coin",
     mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
-    devNet: "EJwZgeZrdC8TXTQbQBoL6bfuAnFUUy1PVCMB4DYPzVaS",
+    devNet: "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr",
     native: false,
     price: 1,
   },
@@ -31,7 +31,7 @@ export const SUPPORTED_TOKENS = [
   },
 ];
 
-export const mode: "devnet" | "mainnet" = "mainnet";
+export const mode: "devnet" | "mainnet" = "devnet";
 
 const devnetUrl = "https://api.devnet.solana.com";
 const mainnetUrl = "https://api.mainnet-beta.solana.com";
@@ -64,5 +64,3 @@ export async function getSupportedTokens() {
     price: price![token.name as keyof PriceApiResponse].usd,
   }));
 }
-
-getSupportedTokens();

@@ -1,6 +1,10 @@
 import { create } from "zustand";
 
-type ModalType = "add-inr-funds";
+type ModalType =
+  | "add-inr-funds"
+  | "withdraw-funds"
+  | "swap-assets"
+  | `show-qr-${string}`;
 
 interface ModalState {
   type: ModalType | null;
