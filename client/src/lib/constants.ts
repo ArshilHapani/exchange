@@ -1,5 +1,5 @@
 /**
- * TimeStamp 2:58:37
+ * TimeStamp 4:23:18
  */
 
 import { Connection } from "@solana/web3.js";
@@ -9,25 +9,29 @@ import { PriceApiResponse } from "@/types";
 
 export const SUPPORTED_TOKENS = [
   {
-    name: "tether",
-    mint: "FSxJ85FXVsXSr51SeWf9ciJWTcRnqKFSmBgRDeL3KyWw", // mainnet
-    devNet: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU", // devnet
-    native: false,
-    price: 1,
+    name: "solana",
+    mint: "So11111111111111111111111111111111111111112",
+    devNet: "So11111111111111111111111111111111111111112",
+    native: true,
+    price: 240,
+    decimals: 9,
   },
+
   {
     name: "usd-coin",
     mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
     devNet: "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr",
     native: false,
     price: 1,
+    decimals: 8,
   },
   {
-    name: "solana",
-    mint: "So11111111111111111111111111111111111111112",
-    devNet: "So11111111111111111111111111111111111111112",
-    native: true,
-    price: 240,
+    name: "tether",
+    mint: "FSxJ85FXVsXSr51SeWf9ciJWTcRnqKFSmBgRDeL3KyWw", // mainnet
+    devNet: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU", // devnet
+    native: false,
+    price: 1,
+    decimals: 8,
   },
 ];
 
