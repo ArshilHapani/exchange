@@ -62,7 +62,7 @@ export function WalletCard({ balance, userId, userAddress }: Props) {
               <Timer size={20} />
               CryptoLink Account Assets
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between flex-wrap">
               {/* crypto balance component */}
               <div className="flex items-baseline gap-1">
                 <div className="flex items-end gap-2 text-4xl font-bold">
