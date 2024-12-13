@@ -33,7 +33,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-l from-blue-50 to-white">
+    <div className="h-full">
       <main>
         {session?.user ? (
           <WalletCard userAddress={address} balance={balance} userId={userId} />

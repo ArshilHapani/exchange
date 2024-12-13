@@ -5,9 +5,9 @@ import localFont from "next/font/local";
 import SessionProvider from "@/components/provider/SessionProvider";
 import Navbar from "@/components/nav-bar";
 import Provider from "@/components/provider";
-import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
+import AnimatedBackground from "@/components/AnimatedGradient";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,15 +34,16 @@ export default async function RootLayout({
   return (
     <html data-theme="light" lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
-        <SessionProvider session={session}>
-          <Provider>
-            <Navbar />
-            <Toaster />
-            {children}
-          </Provider>
-        </SessionProvider>
+        <AnimatedBackground>
+          <SessionProvider session={session}>
+            <Provider>
+              <Navbar />
+              {children}
+            </Provider>
+          </SessionProvider>
+        </AnimatedBackground>
       </body>
     </html>
   );
