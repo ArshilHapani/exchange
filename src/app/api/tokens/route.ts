@@ -1,8 +1,4 @@
-import {
-  getAssociatedTokenAddress,
-  getAccount,
-  getMint,
-} from "@solana/spl-token";
+import { getAssociatedTokenAddress, getAccount } from "@solana/spl-token";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { NextResponse } from "next/server";
 
@@ -58,6 +54,8 @@ async function getAccountBalance(
   balanceInUSD: number;
   balance: number;
   price: number;
+  address: string;
+  decimals: number;
 }> {
   try {
     const mint = token[mode === "devnet" ? "devNet" : "mint"];
@@ -68,6 +66,8 @@ async function getAccountBalance(
         balanceInUSD: (balance / LAMPORTS_PER_SOL) * token.price,
         balance: balance / LAMPORTS_PER_SOL,
         price: token.price,
+        address: token.mint,
+        decimals: token.decimals,
       };
     }
     const ata = await getAssociatedTokenAddress(
@@ -75,13 +75,14 @@ async function getAccountBalance(
       new PublicKey(address)
     );
     const account = await getAccount(connection, ata);
-    const mintDetail = await getMint(connection, new PublicKey(mint));
-    const balance = Number(account.amount) / 10 ** mintDetail.decimals;
+    const balance = Number(account.amount) / 10 ** token.decimals;
     return {
       token: token.name,
       balance,
       balanceInUSD: balance,
       price: token.price,
+      address: token.mint,
+      decimals: token.decimals,
     };
   } catch {
     return {
@@ -89,6 +90,8 @@ async function getAccountBalance(
       balance: 0,
       balanceInUSD: 0,
       price: token.price,
+      address: token.mint,
+      decimals: token.decimals,
     };
   }
 }

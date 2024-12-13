@@ -17,23 +17,22 @@ export const SUPPORTED_TOKENS = [
     price: 240,
     decimals: 9,
   },
-
   {
     name: "usd-coin",
     mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
     devNet: "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr",
     native: false,
     price: 1,
-    decimals: 8,
+    decimals: 6,
   },
-  {
-    name: "tether",
-    mint: "FSxJ85FXVsXSr51SeWf9ciJWTcRnqKFSmBgRDeL3KyWw", // mainnet
-    devNet: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU", // devnet
-    native: false,
-    price: 1,
-    decimals: 8,
-  },
+  // {
+  //   name: "tether",
+  //   mint: "FSxJ85FXVsXSr51SeWf9ciJWTcRnqKFSmBgRDeL3KyWw", // mainnet
+  //   devNet: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU", // devnet
+  //   native: false,
+  //   price: 1,
+  //   decimals: 8,
+  // },
 ];
 
 export const mode: "devnet" | "mainnet" = "devnet";

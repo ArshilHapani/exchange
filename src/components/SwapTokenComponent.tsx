@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowDownUp, ChevronDown, Settings2, Info } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { ArrowDownUp, ChevronDown } from "lucide-react";
 import { TokenIcon } from "@web3icons/react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,16 +23,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "./ui/skeleton";
 
 import { TOKEN_TO_ICON_MAPPING } from "./TokenCard";
-import { calculateTokenSwap } from "@/lib/utils";
+import { getQuote } from "@/lib/interactions/getters";
 
-type TokenData = {
-  token: string;
-  balanceInUSD: number;
-  balance: number;
-  price: number;
-};
+import { QuoteResponse, BalanceMetaData as TokenData } from "@/types";
+import { postSwap } from "@/lib/interactions/posters";
 
 type Props = {
   data: TokenData[];
@@ -44,6 +43,16 @@ export default function TokenSwap({ data }: Props) {
   );
   const [payAmount, setPayAmount] = useState("");
   const [receiveAmount, setReceiveAmount] = useState("");
+  const [quoteResponse, setQuoteResponse] = useState<
+    QuoteResponse | undefined
+  >();
+
+  const { isPending, mutate } = useMutation({
+    mutationFn: getQuote,
+  });
+  const postSwapFn = useMutation({
+    mutationFn: postSwap,
+  });
 
   useEffect(() => {
     setPayToken(data[0]);
@@ -71,6 +80,56 @@ export default function TokenSwap({ data }: Props) {
     setReceiveAmount(payAmount);
   };
 
+  async function handleSwap() {
+    postSwapFn.mutate(quoteResponse, {
+      onSuccess(data) {
+        if (data !== "") {
+          toast.success(`Swap successful with txid: ${data}`, {
+            duration: 10000,
+          });
+        } else {
+          toast.error("Swap failed, please try again later");
+        }
+      },
+      onError() {
+        toast.error("Swap failed, please try again later");
+      },
+    });
+  }
+
+  function setQuoteTokens(amount: number, isReceived: boolean) {
+    const sendToken = isReceived ? receiveToken : payToken;
+    const receiveTokenL = isReceived ? payToken : receiveToken;
+    setTimeout(() => {
+      mutate(
+        {
+          payToken: sendToken.address,
+          receiveToken: receiveTokenL.address,
+          amount: amount * Math.pow(10, sendToken.decimals),
+        },
+        {
+          onSuccess(data) {
+            setQuoteResponse(data);
+            if (isReceived) {
+              setPayAmount(
+                (
+                  Number(data.outAmount ?? "0") /
+                  Math.pow(10, receiveTokenL.decimals)
+                ).toString()
+              );
+            } else {
+              setReceiveAmount(
+                (
+                  Number(data.outAmount ?? "0") /
+                  Math.pow(10, receiveTokenL.decimals)
+                ).toString()
+              );
+            }
+          },
+        }
+      );
+    }, 400);
+  }
   return (
     <div className="w-full rounded-xl bg-background shadow-sm">
       <div className="flex items-center justify-between mb-6">
@@ -111,29 +170,36 @@ export default function TokenSwap({ data }: Props) {
             </DropdownMenu>
             {/* input field for token to swap input */}
             <div className="relative flex-1">
-              <Input
-                type="number"
-                placeholder="0"
-                value={payAmount}
-                onChange={(e) => {
-                  setPayAmount(e.target.value);
-                  const newReceiveAmount = calculateTokenSwap(
-                    Number(e.target.value) ?? 0,
-                    payToken.price,
-                    receiveToken.price
-                  );
-                  setReceiveAmount(newReceiveAmount.toString());
-                }}
-                className="pr-16"
-              />
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute right-2 top-1/2 -translate-y-1/2 h-6 text-xs"
-                onClick={() => setPayAmount(payToken.balance.toString())}
-              >
-                Max
-              </Button>
+              {isPending ? (
+                <>
+                  <Skeleton className="w-full h-10 rounded-lg" />
+                </>
+              ) : (
+                <>
+                  <Input
+                    type="number"
+                    placeholder="0"
+                    value={payAmount}
+                    onChange={(e) => {
+                      setPayAmount(e.target.value);
+                      setQuoteTokens(Number(e.target.value), false);
+                    }}
+                    // dir="rtl"
+                    className="pr-16 outline-none focus:outline-none"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-6 text-xs"
+                    onClick={() => {
+                      setPayAmount(payToken.balance.toString());
+                      setQuoteTokens(payToken.balance, false);
+                    }}
+                  >
+                    Max
+                  </Button>
+                </>
+              )}
             </div>
           </div>
           <p className="text-sm text-muted-foreground px-1">
@@ -189,14 +255,25 @@ export default function TokenSwap({ data }: Props) {
               </DropdownMenuContent>
             </DropdownMenu>
             {/* readonly input for showing how many tokens are going to received */}
-            <Input
-              type="number"
-              placeholder="0"
-              value={receiveAmount}
-              onChange={(e) => setReceiveAmount(e.target.value)}
-              className="flex-1"
-              readOnly
-            />
+            {isPending ? (
+              <>
+                <Skeleton className="w-full h-10 rounded-lg" />
+              </>
+            ) : (
+              <>
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={receiveAmount}
+                  onChange={(e) => {
+                    setReceiveAmount(e.target.value);
+                    setQuoteTokens(Number(e.target.value), true);
+                  }}
+                  // dir="rtl"
+                  className="outline-none focus:outline-none flex-1"
+                />
+              </>
+            )}
           </div>
           <p className="text-sm text-muted-foreground px-1">
             Current Balance: {receiveToken.balance} {receiveToken.token}
@@ -222,22 +299,23 @@ export default function TokenSwap({ data }: Props) {
         </div>
       </div>
 
-      {/* extras... */}
-      <div className="flex items-center justify-between mt-4 mb-6">
-        <Button variant="ghost" className="text-sm gap-2">
-          <Info className="h-4 w-4" />
-          View Swap Details
-        </Button>
-        <Button variant="ghost" size="icon">
-          <Settings2 className="h-4 w-4" />
-        </Button>
-      </div>
-
-      <div className="flex gap-3">
-        <Button variant="outline" className="flex-1">
+      <div className="flex gap-3 mt-4">
+        <Button
+          disabled={
+            !payAmount || !receiveAmount || postSwapFn.isPending || isPending
+          }
+          variant="outline"
+          className="flex-1"
+        >
           Cancel
         </Button>
-        <Button className="flex-1" disabled={!payAmount || !receiveAmount}>
+        <Button
+          className="flex-1"
+          disabled={
+            !payAmount || !receiveAmount || postSwapFn.isPending || isPending
+          }
+          onClick={handleSwap}
+        >
           Confirm & Swap
         </Button>
       </div>
