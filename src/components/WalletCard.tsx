@@ -37,7 +37,7 @@ export function WalletCard({ balance, userId, userAddress }: Props) {
   }
   return (
     <>
-      <Card className="w-full max-w-3xl mx-auto transition-all duration-150 hover:drop-shadow-xl">
+      <Card className="w-full mt-[100px] max-w-3xl mx-auto transition-all duration-150 hover:drop-shadow-xl">
         <CardHeader className="flex flex-row flex-wrap items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12">
