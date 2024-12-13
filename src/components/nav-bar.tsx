@@ -14,8 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
 
 export default function NavBar() {
   const session = useSession();
@@ -73,14 +71,6 @@ export default function NavBar() {
             </div>
           </div>
         </nav>
-      </div>
-      <div className="pt-[80px]">
-        <Alert variant="warning" className="rounded-none">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            You are currently in devnet mode for the Solana blockchain.
-          </AlertDescription>
-        </Alert>
       </div>
     </>
   );

@@ -5,9 +5,10 @@ import localFont from "next/font/local";
 import SessionProvider from "@/components/provider/SessionProvider";
 import Navbar from "@/components/nav-bar";
 import Provider from "@/components/provider";
+import { AnimatedBackground } from "@/components/AnimatedGradient";
+import NoticeIndicator from "@/components/NoticeIndicator";
 
 import "./globals.css";
-import {AnimatedBackground} from "@/components/AnimatedGradient";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,6 +41,7 @@ export default async function RootLayout({
           <SessionProvider session={session}>
             <Provider>
               <Navbar />
+              <NoticeIndicator />
               {children}
             </Provider>
           </SessionProvider>
