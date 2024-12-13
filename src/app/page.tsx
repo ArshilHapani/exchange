@@ -34,7 +34,7 @@ export default async function Home() {
 
   return (
     <div className="h-full">
-      <main>
+      <main className="mt-10" >
         {session?.user ? (
           <WalletCard userAddress={address} balance={balance} userId={userId} />
         ) : (

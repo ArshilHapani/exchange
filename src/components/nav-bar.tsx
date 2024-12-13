@@ -18,7 +18,7 @@ import {
 export default function NavBar() {
   const session = useSession();
   return (
-    <div className="bg-gradient-to-l from-blue-50 to-white">
+    <div className="fixed top-0 w-full bg-white/30 bg-blur-lg">
       <nav className="flex items-center justify-between p-4 max-w-7xl h-[80px] mx-auto">
         <div className="flex items-center gap-8">
           <Link href="/" className="text-2xl font-bold text-blue-500">

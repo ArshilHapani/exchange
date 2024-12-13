@@ -7,7 +7,7 @@ import Navbar from "@/components/nav-bar";
 import Provider from "@/components/provider";
 
 import "./globals.css";
-import AnimatedBackground from "@/components/AnimatedGradient";
+import {AnimatedBackground} from "@/components/AnimatedGradient";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
